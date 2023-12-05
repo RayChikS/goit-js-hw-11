@@ -10,6 +10,7 @@
 }
 body {
   margin: 0;
+  background-color: #f9f0da;
 }
 ul {
   list-style: none;
@@ -64,8 +65,6 @@ button {
   cursor: pointer;
 }
 .form-btn:hover {
-  /* content: '\f002'; */
-  font-family: FontAwesome;
   font-size: 16px;
   background-color: #f9f0da;
   border: 2px solid #7ba7ab;
@@ -74,4 +73,52 @@ button {
 .btn-img {
   width: 30px;
   height: 30px;
+}
+
+.load-more {
+  padding: 15px 40px;
+  border: none;
+  background: #7ba7ab;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 60px;
+}
+.load-more:hover {
+  /* font-size: 16px; */
+  background-color: #f6e0a8;
+  border: 1px solid #7ba7ab;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* cards */
+.photo-card {
+  max-width: 640px;
+  max-height: 550px;
+  background-color: #fff;
+  box-shadow: 5px 7px 5px 1px rgba(0, 0, 0, 0.38);
+}
+.card-img {
+  width: 25%;
+  height: 420px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.gallery {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin: 60px 0;
 }
