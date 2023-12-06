@@ -1,69 +1,61 @@
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { fetchImages } from './api';
+
+const key = '41065725-d4e1c0e5c0158eb500d558a75';
+let isNewSearch = true;
+const perPage = 40;
+let page = 1;
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('.form-input');
 const loadMore = document.querySelector('.load-more');
 const gallery = document.querySelector('.gallery');
-
+const lightbox = new SimpleLightbox('.card-link', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 loadMore.style.display = 'none';
 
-let page = 1;
-const perPage = 40;
-let isNewSearch = true;
-let lightbox;
-
-//fetch images
-
-const fetchImages = async () => {
+const handleFetchError = error => {
+  Notiflix.Notify.failure(
+    'Sorry, there are no images matching your search query. Please try again.'
+  );
   loadMore.style.display = 'none';
+};
 
-  // URL settings
-  const key = '41065725-d4e1c0e5c0158eb500d558a75';
-  const q = input.value;
-  const imageType = 'photo';
-  const orientation = 'horizontal';
-  const safeSearch = 'true';
+const fetchAndDisplayImages = async () => {
+  loadMore.style.display = 'block';
 
-  const apiUrl = `https://pixabay.com/api/?key=${key}&q=${q}&image_type=${imageType}&orientation=${orientation}&safesearch=${safeSearch}&page=${page}&per_page=${perPage}`;
+  const query = input.value.trim();
 
-  // if it is new search - clear gallery
-
-  if (isNewSearch) {
-    gallery.innerHTML = '';
-    isNewSearch = false;
+  if (!query) {
+    Notiflix.Notify.warning('Request cannot be empty');
+    loadMore.style.display = 'none';
+    return;
   }
 
   try {
-    const response = await fetch(apiUrl);
+    const imagesResponse = await fetchImages({ key, q: query, page, perPage });
 
-    if (!response.ok) {
-      Notiflix.Notify.failure(`HTTP error! Status: ${response.status}`);
+    if (isNewSearch) {
+      const totalHits = imagesResponse.totalHits || 0;
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      gallery.innerHTML = '';
+      isNewSearch = false;
     }
 
-    const data = await response.json();
-    const images = data.hits;
-
-    //if arr is empty - return error
+    const images = imagesResponse.hits || [];
 
     if (images.length === 0) {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
+      Notiflix.Notify.failure('No more images available.');
       loadMore.style.display = 'none';
-
       return;
     }
 
-    //render img
-    const totalHits = data.totalHits || 0;
-    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-
-    // console.log(images);
     displayImages(images);
 
-    //if img length = perPage - we display btn with load more, else error
     if (images.length === perPage) {
       loadMore.style.display = 'block';
     } else {
@@ -73,18 +65,26 @@ const fetchImages = async () => {
       loadMore.style.display = 'none';
     }
 
-    //lightbox
     lightbox.refresh();
 
-    //add page
     page++;
   } catch (error) {
-    Notiflix.Notify.failure('An error occurred. Please try again.');
-    loadMore.style.display = 'none';
+    handleFetchError(error);
   }
 };
 
-//render images
+form.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+  page = 1;
+  isNewSearch = true;
+  fetchAndDisplayImages();
+  loadMore.style.display = 'none';
+});
+
+loadMore.addEventListener('click', function () {
+  isNewSearch = false;
+  fetchAndDisplayImages();
+});
 
 const displayImages = images => {
   images.forEach(image => {
@@ -115,33 +115,3 @@ const displayImages = images => {
     gallery.innerHTML += galleryCard;
   });
 };
-
-//form submit
-
-form.addEventListener('submit', function (evt) {
-  evt.preventDefault();
-
-  //defolt page
-  page = 1;
-
-  //new search
-  isNewSearch = true;
-
-  //fetch images
-  fetchImages();
-
-  //display btn load more
-  loadMore.style.display = 'block';
-});
-
-// load more
-loadMore.addEventListener('click', function () {
-  //if it is not new search
-  isNewSearch = false;
-  fetchImages();
-});
-
-lightbox = new SimpleLightbox('.card-link', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
