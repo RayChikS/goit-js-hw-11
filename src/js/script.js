@@ -51,7 +51,7 @@ const fetchAndDisplayImages = async () => {
     const totalHits = imagesResponse.totalHits || 0;
 
     if (isNewSearch && totalHits > 0) {
-      totalPages = Math.ceila(totalHits / perPage);
+      totalPages = Math.ceil(totalHits / perPage);
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
       gallery.innerHTML = '';
       isNewSearch = false;
