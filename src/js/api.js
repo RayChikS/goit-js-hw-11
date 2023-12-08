@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Notiflix from 'notiflix';
+import Notiflix from 'notiflix';a
 
 const fetchImages = async ({ key, q, page, perPage }) => {
   const imageType = 'photo';

@@ -50,10 +50,8 @@ const fetchAndDisplayImages = async () => {
 
     if (isNewSearch) {
       const totalHits = imagesResponse.totalHits || 0;
-      totalPages = Math.floor(totalHits / perPage);
-      Notiflix.Notify.success(
-        `Hooray! We found ${totalHits} images on ${totalPages} pages.`
-      );
+      totalPages = Math.ceila(totalHits / perPage);
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
       gallery.innerHTML = '';
       isNewSearch = false;
     }
@@ -79,7 +77,9 @@ const fetchAndDisplayImages = async () => {
 
     lightbox.refresh();
 
-    Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
+    if (totalPages > 0) {
+      Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
+    }
 
     page++;
   } catch (error) {
