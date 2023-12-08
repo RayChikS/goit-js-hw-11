@@ -57,17 +57,19 @@ const fetchAndDisplayImages = async () => {
       isNewSearch = false;
     }
 
+    const images = imagesResponse.hits || [];
+
     if (totalHits < perPage) {
-      const images = imagesResponse.hits || [];
-
-      if (images.length === 0) {
-        Notiflix.Notify.failure('No more images available.');
-        loadMore.style.display = 'none';
-        return;
-      }
-
-      displayImages(images);
+      loadMore.style.display = 'none';
     }
+
+    if (images.length === 0) {
+      Notiflix.Notify.failure('No more images available.');
+      loadMore.style.display = 'none';
+      return;
+    }
+
+    displayImages(images);
 
     if (page < totalPages) {
       loadMore.style.display = 'block';
