@@ -29,6 +29,7 @@ const handleFetchError = error => {
   Notiflix.Notify.failure(
     'Sorry, there are no images matching your search query. Please try again.'
   );
+
   loadMore.style.display = 'none';
 };
 
@@ -48,24 +49,25 @@ const fetchAndDisplayImages = async () => {
   try {
     const imagesResponse = await fetchImages({ key, q: query, page, perPage });
 
-    const totalHits = imagesResponse.totalHits || 0;
-
-    if (isNewSearch && totalHits > 0) {
+    if (isNewSearch) {
+      const totalHits = imagesResponse.totalHits || 0;
       totalPages = Math.ceil(totalHits / perPage);
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
       gallery.innerHTML = '';
       isNewSearch = false;
     }
 
-    const images = imagesResponse.hits || [];
+    if (totalHits < perPage) {
+      const images = imagesResponse.hits || [];
 
-    if (images.length === 0) {
-      Notiflix.Notify.failure('No more images available.');
-      loadMore.style.display = 'none';
-      return;
+      if (images.length === 0) {
+        Notiflix.Notify.failure('No more images available.');
+        loadMore.style.display = 'none';
+        return;
+      }
+
+      displayImages(images);
     }
-
-    displayImages(images);
 
     if (page < totalPages) {
       loadMore.style.display = 'block';
@@ -77,10 +79,6 @@ const fetchAndDisplayImages = async () => {
     }
 
     lightbox.refresh();
-
-    // if (totalPages > 0) {
-    //   Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
-    // }
 
     page++;
   } catch (error) {
