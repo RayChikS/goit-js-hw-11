@@ -25,16 +25,6 @@ loadMore.style.display = 'none';
 
 //----------------------------------------------
 
-const handleFetchError = error => {
-  Notiflix.Notify.failure(
-    'Sorry, there are no images matching your search query. Please try again.'
-  );
-
-  loadMore.style.display = 'none';
-};
-
-//----------------------------------------------
-
 const fetchAndDisplayImages = async () => {
   loadMore.style.display = 'block';
 
@@ -84,7 +74,11 @@ const fetchAndDisplayImages = async () => {
 
     page++;
   } catch (error) {
-    handleFetchError(error);
+    console.log(error);
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+    loadMore.style.display = 'none';
   }
 };
 
