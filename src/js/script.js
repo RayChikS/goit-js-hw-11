@@ -3,10 +3,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchImages } from './api';
 
-const key = '41065725-d4e1c0e5c0158eb500d558a75';
-let isNewSearch = true;
-const perPage = 40;
-let page = 1;
+//----------------------------------------------
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('.form-input');
@@ -16,7 +13,16 @@ const lightbox = new SimpleLightbox('.card-link', {
   captionsData: 'alt',
   captionDelay: 250,
 });
+
+//----------------------------------------------
+
+const key = '41065725-d4e1c0e5c0158eb500d558a75';
+let isNewSearch = true;
+const perPage = 40;
+let page = 1;
 loadMore.style.display = 'none';
+
+//----------------------------------------------
 
 const handleFetchError = error => {
   Notiflix.Notify.failure(
@@ -24,6 +30,8 @@ const handleFetchError = error => {
   );
   loadMore.style.display = 'none';
 };
+
+//----------------------------------------------
 
 const fetchAndDisplayImages = async () => {
   loadMore.style.display = 'block';
@@ -73,6 +81,8 @@ const fetchAndDisplayImages = async () => {
   }
 };
 
+//----------------------------------------------
+
 form.addEventListener('submit', function (evt) {
   evt.preventDefault();
   page = 1;
@@ -81,10 +91,14 @@ form.addEventListener('submit', function (evt) {
   loadMore.style.display = 'none';
 });
 
+//----------------------------------------------
+
 loadMore.addEventListener('click', function () {
   isNewSearch = false;
   fetchAndDisplayImages();
 });
+
+//----------------------------------------------
 
 const displayImages = images => {
   images.forEach(image => {

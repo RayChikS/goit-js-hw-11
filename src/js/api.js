@@ -19,7 +19,7 @@ const fetchImages = async ({ key, q, page, perPage }) => {
     });
 
     if (!response.data.hits.length) {
-      throw new Error(`Изображения по запросу "${q}" не найдены.`);
+      throw new Error(`No images found for the search term "${q}".`);
     }
 
     return {
@@ -27,7 +27,7 @@ const fetchImages = async ({ key, q, page, perPage }) => {
       hits: response.data.hits,
     };
   } catch (error) {
-    throw new Error(`Ошибка при получении изображений: ${error.message}`);
+    throw new Error(`Error receiving images: ${error.message}`);
   }
 };
 
