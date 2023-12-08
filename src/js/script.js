@@ -77,9 +77,9 @@ const fetchAndDisplayImages = async () => {
 
     lightbox.refresh();
 
-    if (totalPages > 0) {
-      Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
-    }
+    // if (totalPages > 0) {
+    //   Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
+    // }
 
     page++;
   } catch (error) {
