@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Notiflix from 'notiflix';
 
 const fetchImages = async ({ key, q, page, perPage }) => {
   const imageType = 'photo';
@@ -19,7 +20,7 @@ const fetchImages = async ({ key, q, page, perPage }) => {
     });
 
     if (!response.data.hits.length) {
-      throw new Error(`No images found for the search term "${q}".`);
+      Notiflix.Notify.failure(`No images found for the search term "${q}".`);
     }
 
     return {
@@ -27,7 +28,7 @@ const fetchImages = async ({ key, q, page, perPage }) => {
       hits: response.data.hits,
     };
   } catch (error) {
-    throw new Error(`Error receiving images: ${error.message}`);
+    Notiflix.Notify.failure(`Error receiving images: ${error.message}`);
   }
 };
 
