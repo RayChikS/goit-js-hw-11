@@ -20,6 +20,7 @@ const key = '41065725-d4e1c0e5c0158eb500d558a75';
 let isNewSearch = true;
 const perPage = 40;
 let page = 1;
+let totalPages = 0;
 loadMore.style.display = 'none';
 
 //----------------------------------------------
@@ -49,7 +50,10 @@ const fetchAndDisplayImages = async () => {
 
     if (isNewSearch) {
       const totalHits = imagesResponse.totalHits || 0;
-      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      totalPages = Math.ceil(totalHits / perPage); // Обчислюємо загальну кількість сторінок
+      Notiflix.Notify.success(
+        `Hooray! We found ${totalHits} images on ${totalPages} pages.`
+      );
       gallery.innerHTML = '';
       isNewSearch = false;
     }
@@ -64,7 +68,7 @@ const fetchAndDisplayImages = async () => {
 
     displayImages(images);
 
-    if (images.length === perPage) {
+    if (page < totalPages) {
       loadMore.style.display = 'block';
     } else {
       Notiflix.Notify.info(
@@ -74,6 +78,8 @@ const fetchAndDisplayImages = async () => {
     }
 
     lightbox.refresh();
+
+    Notiflix.Notify.info(`Page ${page} of ${totalPages}`);
 
     page++;
   } catch (error) {
