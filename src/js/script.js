@@ -50,7 +50,7 @@ const fetchAndDisplayImages = async () => {
 
     if (isNewSearch) {
       const totalHits = imagesResponse.totalHits || 0;
-      totalPages = Math.ceil(totalHits / perPage); // Обчислюємо загальну кількість сторінок
+      totalPages = Math.floor(totalHits / perPage);
       Notiflix.Notify.success(
         `Hooray! We found ${totalHits} images on ${totalPages} pages.`
       );
